@@ -8,7 +8,7 @@ You are performing the investigation phase of first-pass triage on issue #{{ wor
 
 ## Time budget
 
-You have a **soft budget of 10 minutes** for this pass; the engine hard-kills this step at 15 minutes. Check the wall clock with `date` before starting each major step (environment setup, running the server, test runs). **If the budget is nearly spent, stop immediately** — finish your current command, write your notes, and return `status: out_of_time` with your findings so far. Do not start anything new near the end of the budget. Running out of time is a normal, expected outcome, not a failure.
+You have a **soft budget of 30 minutes** for this pass; the engine hard-kills this step at 45 minutes. Check the wall clock with `date` before starting each major step (environment setup, running the server, test runs). **If the budget is nearly spent, stop immediately** — finish your current command, write your notes, and return `status: out_of_time` with your findings so far. Do not start anything new near the end of the budget. Running out of time is a normal, expected outcome, not a failure.
 
 The Wagtail source tree is checked out at `{{ workflow.input.wagtail_dir }}` — this is your working directory. Read these prefetched files instead of re-fetching:
 

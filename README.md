@@ -37,8 +37,8 @@ First-pass triage of a newly opened (or reopened) Wagtail issue:
   any remaining mentions (outside code blocks) as a backstop.
 
 Triage runs in two phases with a time budget: an **investigation** phase
-(reproduction, classification, component labels, ~20 minutes with a hard
-timeout) writes running notes to `.runs/<issue>/scratch/NOTES.md`; if it runs
+(reproduction, classification, component labels, 30-minute soft budget with a
+45-minute hard timeout) writes running notes to `.runs/<issue>/scratch/NOTES.md`; if it runs
 out of time, a **human gate** asks whether to keep going, conclude as not
 reproducible and post the outcome, or conclude without posting anything. A
 fast **drafting** phase then turns the findings into the comment, labels, and

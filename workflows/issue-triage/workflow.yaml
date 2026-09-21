@@ -76,7 +76,7 @@ agents:
     working_dir: "{{ workflow.input.wagtail_dir }}"
     skills:
       - ../../skills
-    timeout_seconds: 900
+    timeout_seconds: 2700
     max_agent_iterations: 100
     output:
       status:
