@@ -74,6 +74,7 @@ The overall comment (review body) must be scannable:
 
   Keep blank lines inside the `<details>` block so GitHub renders the markdown.
 - The submit step prepends an AI-generated disclaimer note automatically — do not add one yourself. Inline comments don't need the disclaimer or the `<details>` treatment.
+- In the overall comment and in inline comment bodies alike, do not wrap commit references (commit SHAs, or `commit@{...}` notation) in backticks or inline code — write them as plain text so GitHub autolinks them to the commit (e.g. reference abc1234 as-is, not in code formatting).
 
 Write the full review payload to `{{ workflow.dir }}/.runs/{{ workflow.input.pr }}/scratch/review-output.json` with exactly this shape (the submit step reads this file — the gate sees your digest, so the file is the source of truth):
 
