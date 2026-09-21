@@ -4,6 +4,14 @@ You are reviewing pull request #{{ workflow.input.pr }} in `{{ workflow.input.re
 
 A human will sign off on your review before it is submitted, and a deterministic step will submit it — **you write nothing to GitHub**: no review, no comments, no pushes. Your outputs are the verdict, a summary, an overall comment, and inline line comments.
 
+{% if signoff_gate is defined %}
+**This is a revision pass.** The human sign-off saw the previously drafted review at the sign-off gate and asked for changes before it was submitted. Their feedback:
+
+> {{ signoff_gate.output.additional_input.feedback }}
+
+Apply the feedback to your previous review — the payload you drafted last time is at `{{ workflow.dir }}/.runs/{{ workflow.input.pr }}/scratch/review-output.json` (keep everything that already satisfied the requirements, and change only what the feedback calls for). Re-read the full instructions below and produce the complete payload again.
+{% endif %}
+
 ## Time budget
 
 You have a **soft budget of 30 minutes**; the engine hard-kills this step at 45 minutes. Check the wall clock with `date` before starting each major step. If the budget is nearly spent, stop immediately — finish your current command, write your notes, and return `status: out_of_time` with your findings so far. The sign-off gate will still be shown your partial review, marked as incomplete.
