@@ -4,6 +4,14 @@ You are drafting the final triage decision for issue #{{ workflow.input.issue }}
 
 You do not perform any GitHub write operations yourself. Decide what should happen and return it as structured JSON — a separate deterministic step applies labels, updates the issue body, and posts the comment exactly once.
 
+{% if submission_gate is defined %}
+**This is a revision pass.** A reviewer saw the previously drafted outcome at the sign-off gate and asked for changes before it was applied. Their feedback:
+
+> {{ submission_gate.output.additional_input.feedback }}
+
+Apply the feedback to your previous draft (it is in your context) — keep everything that already satisfied the requirements below, and change only what the feedback calls for. If the feedback reveals a problem with the investigation itself, do not re-investigate: note it in `noop_reason` and return `action: noop` so a human can address it.
+{% endif %}
+
 {% if time_budget_gate is defined and time_budget_gate.output.selected == 'wrap_up_apply' %}
 ## Wrap-up mode
 

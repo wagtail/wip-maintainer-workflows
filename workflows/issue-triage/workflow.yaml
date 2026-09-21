@@ -173,7 +173,51 @@ agents:
     routes:
       - to: noop_end
         when: "action == 'noop'"
-      - to: apply_outputs
+      - to: submission_gate
+
+  # --- Human gate: sign off before anything is applied -------------------------
+  # Nothing has been written to GitHub; the reviewer sees the exact comment,
+  # labels, and body update the deterministic step will apply.
+  - name: submission_gate
+    type: human_gate
+    description: "Sign off on the triage outcome before it is applied"
+    prompt: |
+      ## Triage outcome ready for sign-off — issue #{{ workflow.input.issue }}
+
+      Nothing has been written to GitHub yet. The apply step will post exactly
+      this comment, apply these label changes, and update the issue body as
+      described (a disclaimer note is prepended to the comment automatically,
+      and any @-mentions are stripped).
+
+      **Reproduced:** {{ triage_finalize.output.reproduced }}
+
+      **Labels:** add {{ triage_finalize.output.labels_to_add | join(", ") or "_(none)_" }} ·
+      remove {{ triage_finalize.output.labels_to_remove | join(", ") or "_(none)_" }}
+
+      **Issue body:** {{ triage_finalize.output.issue_body == None and "_(unchanged)_" or "updated 'Working on this' section (full text in scratch/triage-output.json)" }}
+
+      ### Comment
+
+      {{ triage_finalize.output.comment or "_(none)_" }}
+    options:
+      - label: "Post comment & apply"
+        value: apply
+        description: "Apply the labels, body update, and post the comment exactly as shown"
+        route: apply_outputs
+      - label: "Revise"
+        value: revise
+        description: "Send the outcome back to the drafting agent with feedback"
+        route: triage_finalize
+        prompt_for: feedback
+      - label: "Discard"
+        value: discard
+        description: "Discard the outcome without applying anything"
+        route: discarded_end
+
+  - name: discarded_end
+    type: terminate
+    status: success
+    reason: "Triage outcome reviewed and discarded at the gate; nothing was applied."
 
   - name: noop_end
     type: terminate

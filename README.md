@@ -42,7 +42,10 @@ timeout) writes running notes to `.runs/<issue>/scratch/NOTES.md`; if it runs
 out of time, a **human gate** asks whether to keep going, conclude as not
 reproducible and post the outcome, or conclude without posting anything. A
 fast **drafting** phase then turns the findings into the comment, labels, and
-body update, which a deterministic step applies.
+body update, and a **sign-off gate** shows the exact comment and label changes
+before anything is applied: post as shown, send back to the drafting agent
+with feedback, or discard without applying anything. The deterministic step
+then applies them.
 
 The triage agent decides but never writes: labels, body updates, and the
 comment are applied by a deterministic script that enforces allowlists and caps
