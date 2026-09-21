@@ -92,6 +92,33 @@ The implementation agent decides the code, and the PR itself is applied by a
 deterministic script that enforces the draft flag and the template contract —
 same decide/apply split as `issue-triage`.
 
+### `pr-review`
+
+Reviews a Wagtail pull request:
+
+- **Prefetch** fetches the PR metadata, changed files, and any existing
+  reviews, then checks the PR out (detached, at `refs/pull/<n>/head`) into a
+  git worktree of your local checkout and records the base SHA so the reviewer
+  can `git diff <base>...HEAD`. The detached checkout avoids branch-name
+  collisions with worktrees from other workflows (e.g. an issue-to-pr run
+  holding the same `fix/issue-<n>` branch).
+- The **reviewer agent** assesses the diff for correctness, runs the tests
+  covering the changed code (shared `run-tests` skill), and verifies
+  user-facing behaviour when tests don't cover it. Changelog/release-note
+  entries are explicitly **not** a review gap — maintainers add them at merge
+  time.
+- It produces a verdict **recommendation** (`approve` / `request_changes` /
+  `comment`), an overall comment, and inline line comments validated against
+  the PR's changed files.
+- A **sign-off gate** shows the verdict, summary, and every inline comment
+  before anything is submitted: submit / revise with feedback / abandon. If
+  the review ran out of time, the gate shows the partial findings marked as
+  such.
+- Submission is deterministic: the payload verdict must match what was signed
+  off, mentions are stripped, and the review is **always submitted as a
+  COMMENT review** — APPROVE / REQUEST_CHANGES are formal merge-gate verdicts
+  reserved for humans.
+
 ## Layout
 
 ```
@@ -145,33 +172,6 @@ environments are shared rather than duplicated — don't delete the originals.
 
 Both workflows share the repo-root `skills/` and `data/labels.json` via
 relative paths, so shared knowledge and snapshots stay in one place.
-
-### `pr-review`
-
-Reviews a Wagtail pull request:
-
-- **Prefetch** fetches the PR metadata, changed files, and any existing
-  reviews, then checks the PR out (detached, at `refs/pull/<n>/head`) into a
-  git worktree of your local checkout and records the base SHA so the reviewer
-  can `git diff <base>...HEAD`. The detached checkout avoids branch-name
-  collisions with worktrees from other workflows (e.g. an issue-to-pr run
-  holding the same `fix/issue-<n>` branch).
-- The **reviewer agent** assesses the diff for correctness, runs the tests
-  covering the changed code (shared `run-tests` skill), and verifies
-  user-facing behaviour when tests don't cover it. Changelog/release-note
-  entries are explicitly **not** a review gap — maintainers add them at merge
-  time.
-- It produces a verdict **recommendation** (`approve` / `request_changes` /
-  `comment`), an overall comment, and inline line comments validated against
-  the PR's changed files.
-- A **sign-off gate** shows the verdict, summary, and every inline comment
-  before anything is submitted: submit / revise with feedback / abandon. If
-  the review ran out of time, the gate shows the partial findings marked as
-  such.
-- Submission is deterministic: the payload verdict must match what was signed
-  off, mentions are stripped, and the review is **always submitted as a
-  COMMENT review** — APPROVE / REQUEST_CHANGES are formal merge-gate verdicts
-  reserved for humans.
 
 ## Requirements
 
